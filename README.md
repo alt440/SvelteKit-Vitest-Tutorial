@@ -1,41 +1,56 @@
 
 # SvelteKit-Vitest-Tutorial
 
-# create-svelte
+## Prerequisites
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+You need to have NodeJS installed. This is what you will use to download dependencies and create your project.
 
-## Creating a project
+## Creating your SvelteKit application
 
-If you're seeing this, you've probably already done this step. Congrats!
+To create your SvelteKit project, you will need to execute npm commands. Note that the 'npm create' command will ask you many questions: for the purpose of this tutorial, I have answered that I only wanted Vanilla JS in my project, and that I wanted Vitest configured.
 
+The commands you have to execute:
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
+npm create svelte@latest <nameProject>
+cd <nameProject>
+npm install
+```
+Where <nameProject> is the name of your project. This will create your project and download the necessary dependencies.
 
-# create a new project in my-app
-npm create svelte@latest my-app
+## Migrating to SvelteKit
+
+To migrate your Svelte project to Svelte Kit, your original 'App.svelte' file becomes the +page.svelte file directly under the routes folder. Then, you can put any components that you have under the lib folder.
+
+## Add Dependencies
+
+There are two dependencies that need to be added: the testing library for svelte (@testing-library/svelte) and jsdom.
+```bash
+npm install -D vitest jsdom @testing-library/svelte
 ```
 
-## Developing
+## Changing the Vitest Configuration
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+After this is done, you will need to change the Vitest configuration. Otherwise, your Svelte components will not be able to render when you will be executing your automated tests.
 
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+This can be done in the vite.config.js file, found directly under the project directory. You need to change the value of the JSON 'test' object so that it becomes:
+```json
+test: {
+		environment: 'jsdom',
+		include: ['test/**/*.{test,spec}.{js,ts}']
+	}
 ```
 
-## Building
+This will configure Vitest to look for tests in the test/ folder, and use 'jsdom' (a simulated browser environment) to render your components.
 
-To create a production version of your app:
+## Creating the Vitest Tests
 
+To create the tests, you will need the 'it' and 'expect' functions from Vitest, and the 'render' function from the Svelte testing library. The 'it' function allows you to name your test and define its contents. The 'expect' function allows you to make assertions for your tests, confirming the desired behavior. Finally, the 'render' function allows you to render the component for your tests, allowing you to query its structure to determine its contents. See my test files under test/lib/.
+
+## Running the Vitest Tests
+
+Because of the Vitest configuration that was set up earlier, you only need to execute one command to run all of your tests. It needs to be run exactly from the project directory (the folder where vite.config.js is located). Here it is:
 ```bash
-npm run build
+npx vitest run
 ```
 
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+In this project, I have made 8 tests under the test/lib/ folder. When running the above command, there should be 8 tests that finish in success: 6 from InfoBubble.test.js, and 2 from Modal.test.js.
