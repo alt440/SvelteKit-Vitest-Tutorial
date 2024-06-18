@@ -34,10 +34,10 @@ After this is done, you will need to change the Vitest configuration. Otherwise,
 
 This can be done in the vite.config.js file, found directly under the project directory. You need to change the value of the JSON 'test' object so that it becomes:
 ```json
-test: {
-		environment: 'jsdom',
-		include: ['test/**/*.{test,spec}.{js,ts}']
-	}
+{
+	environment: 'jsdom',
+	include: ['test/**/*.{test,spec}.{js,ts}']
+}
 ```
 
 This will configure Vitest to look for tests in the test/ folder, and use 'jsdom' (a simulated browser environment) to render your components.
